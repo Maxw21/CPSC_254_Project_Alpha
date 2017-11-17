@@ -17,6 +17,6 @@ MemoryData::MemoryData(string address, string data, string size, string cycle) {
 
 MemoryData::~MemoryData() { }
 
-MemoryData::setTime(string time) {
+string MemoryData::setTime(string time) {
 	this->time = time;
 }
