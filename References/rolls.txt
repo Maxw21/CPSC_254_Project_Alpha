@@ -1,0 +1,20 @@
+Alex:
+MemoryData (done)
+Output formatting
+
+Kenny:
+Decipher binary bit string to proper word/command call
+
+Kiren:
+Hex (in string format) to Binary (in string format) converter
+
+Max:
+Parser (done)
+Main function calling
+
+Work Together:
+Makefile
+Calculate data rate
+
+If anyone feels like they have too much to do, text the group.
+These are tentative, I'm not sure if one will take a lot longer than the other.
