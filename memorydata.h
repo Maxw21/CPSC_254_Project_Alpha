@@ -6,7 +6,7 @@ public:
 	MemoryData();
 	MemoryData(string, string, string, string);
 	~MemoryData();
-	string setTime(string);
+	void setTime(string);
 private:
 	string address;
 	string data;
