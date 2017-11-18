@@ -1,7 +1,7 @@
-#include <interpreter.h>
+#include "interpreter.h"
 
 Interpreter::Interpreter() {
-	bit = -1;
+	bit = -1;	// Subject to change
 	description = "";
 }
 
