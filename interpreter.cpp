@@ -2,47 +2,67 @@
 
 Interpreter::Interpreter() {
 	bit = -1;
+	description = "";
 }
 
 Interpreter::~Interpreter() {}
 
-string Interpreter::word0(int value) {
+string Interpreter::word_0(int value) {
 	switch (value) {
-	case 0: cout << "no recording";
+	case 0: description = "no recording";
 		break;
-	case 2: cout << "no processing";
+	case 2: description = "no processing";
 		break;
-	case 3: cout << "processing & recording";
+	case 3: description = "processing & recording";
 		break;
-	default: cout << "unknown";
+	default: description = "unknown";
 	}
+	return description;
 }
 
-void Interpreter::word1(int value) {
+string Interpreter::word_1(int value) {
 	switch (value) {
-	case 4: cout << "Type A";
+	case 4: description = "Type A";
 		break;
-	case 5: cout << "Type B";
+	case 5: description = "Type B";
 		break;
-	case 6: cout << "Type C";
+	case 6: description = "Type C";
 		break;
-	default: cout << "unknown";
+	default: description = "unknown";
 	}
+	return description;
 }
 
-void Interpreter::word4(int value) {
+string Interpreter::word_4_15_38_40(int value) {
 	switch (value) {
-	case 0: cout << "disable";
+	case 0: description = "disable";
 		break;
-	case 1: cout << "enable";
+	case 1: description = "enable";
 		break;
-	default: cout << "unknown";
+	default: description = "unknown";
 		break;
 	}
+	return description;
 }
 
-void Interpreter::word5(int value) {
+string Interpreter::word_22(int value) {
 	switch (value) {
-		
+	case 0: description = "Right";
+		break;
+	case 1: description = "Left"
+		break;
+	default: description = "unknown";
 	}
+	return description;
+}
+
+string Interpreter::word_37(int value) {
+	switch (value) {
+	case 0: description = "even";
+		break;
+	case 1: description = "odd";
+		break;
+	default: description = "unknown";
+	}
+	return description;
 }
