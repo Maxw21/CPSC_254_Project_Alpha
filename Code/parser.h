@@ -11,13 +11,14 @@
 using namespace std;
 
 extern ifstream dataFile;
+extern fstream rwStream;
 
 class Parser {
 public:
 	Parser();
 	~Parser();
-	void makeList();
 	list<MemoryData*> getList();
+	void parseData();
 	
 private:
 	list<MemoryData*> dataList;

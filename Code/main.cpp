@@ -1,16 +1,14 @@
 #include "parser.h"
 #include <fstream>
 
-ifstream dataFile;
-
 using namespace std;
 
-
+ifstream dataFile;
+fstream rwStream;
 
 int main() {
 
 	Parser* parser = new Parser();
-	parser->makeList();
-
+	parser->parseData();
 	return 0;
 }
