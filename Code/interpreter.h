@@ -2,27 +2,26 @@
 #define _INTERPRETER_H
 
 #include <string>
+#include <map>
+#include <vector>
 using namespace std;
 
 class Interpreter {
 public:
 	Interpreter();
 	~Interpreter();
-
-	string word_fld_name(int);
-
-	string word_0_dscr(int);
-	string word_1_dscr(int);
-	string word_4_15_38_40_dscr(int);
-	string word_22_dscr(int);
-	string word_37_dscr(int);
+	string message(char*);
+	string outputConv(int, map<int, char>);
 
 private:
-	char* binConv;
-	int binVal;
-	int wordNumber;
-	string fieldName;
-	string description;
+	char* binary;
+	string outMsg;
+	int wordCount;
+	int wordTotal;
+	int i;
+	int j;
+	map<int, char> bitMap1;
+	map<int, char> bitMap2;
 };
 
 #endif
