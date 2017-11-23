@@ -3,15 +3,14 @@
 
 #include <string>
 #include <map>
-#include <vector>
 using namespace std;
 
 class Interpreter {
 public:
 	Interpreter();
 	~Interpreter();
-	string message(char*);
-	string outputConv(int, map<int, char>);
+	int bin_parser(string, int);
+	string bin_to_message(int, map<int, char>);
 
 private:
 	char* binary;
@@ -20,8 +19,9 @@ private:
 	int wordTotal;
 	int i;
 	int j;
-	map<int, char> bitMap1;
-	map<int, char> bitMap2;
+	map<int, char> binMap1;
+	map<int, char> binMap2;
+	void message_output(int, string);
 };
 
 #endif
