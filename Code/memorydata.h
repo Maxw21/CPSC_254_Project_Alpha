@@ -7,13 +7,17 @@ using namespace std;
 class MemoryData {
 public:
 	MemoryData();
-	MemoryData(string, string, string, string, string, int);
+	MemoryData(string, string, string, string, int);
 	~MemoryData();
 	void setTime(string);
+	string getAddress();
+	string getData();
+	string getTime();
+	int getLineNumber();
+
 private:
 	string address;
 	string data;
-	string size;
 	string cycle;
 	string time;
 	int lineNumber;

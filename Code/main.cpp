@@ -8,7 +8,11 @@ fstream rwStream;
 
 int main() {
 
+	list<MemoryData*> dataList;
+
 	Parser* parser = new Parser();
 	parser->parseData();
+	dataList = parser->getList();
+
 	return 0;
 }
