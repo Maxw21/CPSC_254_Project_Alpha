@@ -6,7 +6,6 @@
 #include <fstream>
 #include <list>
 #include "memorydata.h"
-#include "field_name_commands.h"
 using namespace std;
 
 class Interpreter {
