@@ -52,44 +52,78 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 			ptr = dataList.front();
 
 			// INITIALIZE ADDRESS, BINARY, AND LINE NUMBER OF CURRENT NODE
-			list_address = data.getAddress();	
-			list_data = data.getData();			
+			list_address = data.getAddress();
+			list_data = data.getData();
 			list_line_number = data.getLineNumber();
 			binary = hex_to_bin(list_data);
 
 			// POP CURRENT NODE TO COMPARE ADDRESS WITH NEXT NODE
-			dataList.pop_front();				
-			ptr = dataList.front();				
+			dataList.pop_front();
+			ptr = dataList.front();
 			list_address_2 = data.getAddress();
 
-			if (list_address < list_address_2) {
-				bin_parser_inorder(binary, 0, wordTotal, lineNum);
-				wordCount = 2;
+			if ((list_address >= "40000818") && (list_address <= "4000086B")) {
+				if (list_address < list_address_2) {
+					bin_parser_inorder(binary, 0, wordTotal, lineNum);
+					wordCount = 2;
 
-				while (list_address <= "4000086B") {
-					list_address = data.getAddress();
-					list_data = data.getData();
-					binary = hex_to_bin(list_data);
-					list_line_number = data.getLineNumber();
+					while (list_address <= "4000086B") {
+						list_address = data.getAddress();
+						list_data = data.getData();
+						binary = hex_to_bin(list_data);
+						list_line_number = data.getLineNumber();
 
-					bin_parser_inorder(binary, wordCount, wordTotal, lineNum);
-					dataList.pop_front();
-					ptr = dataList.front();
+						bin_parser_inorder(binary, wordCount, wordTotal, lineNum);
+						dataList.pop_front();
+						ptr = dataList.front();
+					}
+				}
+				else if (list_address > list_address_2) {
+					wordCount = wordTotal;
+					bin_parser_revorder(binary, wordCount, lineNum);
+
+					while (list_address >= "40000818") {
+						list_address = data.getAddress();
+						list_data = data.getData();
+						binary = hex_to_bin(list_data);
+						list_line_number = data.getLineNumber();
+
+						bin_parser_revorder(binary, wordCount, lineNum);
+						dataList.pop_front();
+						ptr = dataList.front();
+					}
 				}
 			}
-			else if (list_address > list_address_2) {
-				wordCount = wordTotal;
-				bin_parser_revorder(binary, wordCount, lineNum);
-				
-				while (list_address >= "40000818") {
-					list_address = data.getAddress();
-					list_data = data.getData();
-					binary = hex_to_bin(list_data);
-					list_line_number = data.getLineNumber();
+			else if ((list_address >= "40000C20") && (list_address <= "40000C73")) {
+				if (list_address < list_address_2) {
+					bin_parser_inorder(binary, 0, wordTotal, lineNum);
+					wordCount = 2;
 
+					while (list_address <= "40000C73") {
+						list_address = data.getAddress();
+						list_data = data.getData();
+						binary = hex_to_bin(list_data);
+						list_line_number = data.getLineNumber();
+
+						bin_parser_inorder(binary, wordCount, wordTotal, lineNum);
+						dataList.pop_front();
+						ptr = dataList.front();
+					}
+				}
+				else if (list_address > list_address_2) {
+					wordCount = wordTotal;
 					bin_parser_revorder(binary, wordCount, lineNum);
-					dataList.pop_front();
-					ptr = dataList.front();
+
+					while (list_address >= "40000C20") {
+						list_address = data.getAddress();
+						list_data = data.getData();
+						binary = hex_to_bin(list_data);
+						list_line_number = data.getLineNumber();
+
+						bin_parser_revorder(binary, wordCount, lineNum);
+						dataList.pop_front();
+						ptr = dataList.front();
+					}
 				}
 			}
 		}
