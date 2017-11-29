@@ -3,16 +3,14 @@
 MemoryData::MemoryData() {
 	address = "";
 	data = "";
-	size = "";
 	cycle = "";
 	time = "";
 	lineNumber = 0;
 }
 
-MemoryData::MemoryData(string address, string data, string size, string cycle, string time, int lineNumber) {
+MemoryData::MemoryData(string address, string data, string cycle, string time, int lineNumber) {
 	this->address = address;
 	this->data = data;
-	this->size = size;
 	this->cycle = cycle;
 	this->time = time;
 	this->lineNumber = lineNumber;
@@ -22,4 +20,20 @@ MemoryData::~MemoryData() { }
 
 void MemoryData::setTime(string time) {
 	this->time = time;
+}
+
+string MemoryData::getAddress() {
+	return address;
+}
+
+string MemoryData::getData() {
+	return data;
+}
+
+string MemoryData::getTime() {
+	return time;
+}
+
+int MemoryData::getLineNumber() {
+	return lineNumber;
 }
