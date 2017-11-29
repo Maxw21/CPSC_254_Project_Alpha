@@ -38,9 +38,6 @@ int Interpreter::bin_parser_inorder(string binary, int wordCount, int wordTotal,
 		}
 		x++;
 
-		if (x >= wordTotal)
-			outFile << endl;
-
 		return x;
 }
 
@@ -64,8 +61,7 @@ int Interpreter::bin_parser_revorder(string binary, int wordCount, int lineNum) 
 			outMsg = bin_to_message(x, binMap1);
 			message_output_fields(lineNum, x, outMsg);
 		}
-		if (x <= 0)
-			outFile << endl;
+
 		x--;
 
 		return x;
