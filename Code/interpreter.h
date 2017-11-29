@@ -14,6 +14,7 @@ public:
 	~Interpreter();
 	int bin_parser_inorder(string, int, int, int);
 	int bin_parser_revorder(string, int, int);
+	string bin_to_message(int, map<int, char>);
 	void list_of_data(list<MemoryData*>);
 	void message_output_rw(int, int);
 

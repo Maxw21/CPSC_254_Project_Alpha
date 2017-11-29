@@ -201,7 +201,7 @@ void Interpreter::message_output_rw(int lineNum, int wordNum) {
 }
 
 void Interpreter::list_of_data(list<MemoryData*> dataList) {
-	ptr = dataList.front();
+	MemoryData* ptr = dataList.front();
 	while (true) {
 		// INITIALIZE FIRST NODE DATA
 		list_address = data.getAddress();
@@ -248,7 +248,7 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 
 			if ((list_address >= "40000818") && (list_address <= "4000086B")) {
 				if (list_address < list_address_2) {
-					bin_parser_inorder(binary, 0, wordTotal, lineNum);
+					bin_parser_inorder(binary, 0, wordTotal, list_line_number);
 					wordCount = 2;
 
 					while (list_address <= "4000086B") {
@@ -257,14 +257,14 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						binary = hex_to_bin(list_data);
 						list_line_number = data.getLineNumber();
 
-						bin_parser_inorder(binary, wordCount, wordTotal, lineNum);
+						bin_parser_inorder(binary, wordCount, wordTotal, list_line_number);
 						dataList.pop_front();
 						ptr = dataList.front();
 					}
 				}
 				else if (list_address > list_address_2) {
 					wordCount = wordTotal;
-					bin_parser_revorder(binary, wordCount, lineNum);
+					bin_parser_revorder(binary, wordCount, list_line_number);
 
 					while (list_address >= "40000818") {
 						list_address = data.getAddress();
@@ -272,7 +272,7 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						binary = hex_to_bin(list_data);
 						list_line_number = data.getLineNumber();
 
-						bin_parser_revorder(binary, wordCount, lineNum);
+						bin_parser_revorder(binary, wordCount, list_line_number);
 						dataList.pop_front();
 						ptr = dataList.front();
 					}
@@ -280,7 +280,7 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 			}
 			else if ((list_address >= "40000C20") && (list_address <= "40000C73")) {
 				if (list_address < list_address_2) {
-					bin_parser_inorder(binary, 0, wordTotal, lineNum);
+					bin_parser_inorder(binary, 0, wordTotal, list_line_number);
 					wordCount = 2;
 
 					while (list_address <= "40000C73") {
@@ -289,14 +289,14 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						binary = hex_to_bin(list_data);
 						list_line_number = data.getLineNumber();
 
-						bin_parser_inorder(binary, wordCount, wordTotal, lineNum);
+						bin_parser_inorder(binary, wordCount, wordTotal, list_line_number);
 						dataList.pop_front();
 						ptr = dataList.front();
 					}
 				}
 				else if (list_address > list_address_2) {
 					wordCount = wordTotal;
-					bin_parser_revorder(binary, wordCount, lineNum);
+					bin_parser_revorder(binary, wordCount, list_line_number);
 
 					while (list_address >= "40000C20") {
 						list_address = data.getAddress();
@@ -304,7 +304,7 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						binary = hex_to_bin(list_data);
 						list_line_number = data.getLineNumber();
 
-						bin_parser_revorder(binary, wordCount, lineNum);
+						bin_parser_revorder(binary, wordCount, list_line_number);
 						dataList.pop_front();
 						ptr = dataList.front();
 					}
