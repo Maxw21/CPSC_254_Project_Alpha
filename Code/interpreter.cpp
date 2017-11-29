@@ -197,6 +197,7 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 	data = dataList.front();
 	while (true) {
 		// INITIALIZE FIRST NODE DATA
+		wordTotal = 0;
 		list_address = data->getAddress();
 		list_data = data->getData();
 		list_line_number = data->getLineNumber();
