@@ -10,15 +10,20 @@ void Parser::parseData() {
 	int lineNumber = 1;
 	MemoryData* newData;
 	string dataStringTok[4] = { "" };
+	string testString;
 
 	dataFile.open("test_data.log", ios::in);
 
 	if (!dataFile.is_open()) {
 		exit(1);
 	}
+	//Skip to address location
 	dataFile.ignore(82);
 	while (!dataFile.eof()) {
 		dataFile >> dataStringTok[0];
+		testString = "0x";
+		testString.append(dataStringTok[0]);
+		// If the address is valid save the data from the line into memorydata object and store those in a list
 		if (dataStringTok[0] == "40000810") {
 			dataFile >> dataStringTok[1];
 			dataFile.ignore(11);
@@ -39,8 +44,7 @@ void Parser::parseData() {
 			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], lineNumber);
 			dataList.push_back(newData);
 		}
-		else if (dataStringTok[0].compare("IACK=7") == 0) { dataFile.ignore(144); }
-		else if (stoll(dataStringTok[0], 0, 16) >= stoll("40000C20", 0, 16) && stoll(dataStringTok[0], 0, 16) <= stoll("40000C73", 0, 16)) {
+		else if (testString >= "0x40000C20" && testString <= "0x40000C73") {
 			dataFile >> dataStringTok[1];
 			dataFile.ignore(11);
 			dataFile >> dataStringTok[2];
@@ -50,7 +54,7 @@ void Parser::parseData() {
 			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], lineNumber);
 			dataList.push_back(newData);
 		}
-		else if (stoll(dataStringTok[0], 0, 16) >= stoll("40000818", 0, 16) && stoll(dataStringTok[0], 0, 16) <= stoll("4000086B", 0, 16)) {
+		else if (testString >= "0x40000818" && testString <= "0x4000086B") {
 			dataFile >> dataStringTok[1];
 			dataFile.ignore(11);
 			dataFile >> dataStringTok[2];
