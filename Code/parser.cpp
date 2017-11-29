@@ -40,7 +40,7 @@ void Parser::parseData() {
 			dataList.push_back(newData);
 		}
 		else if (dataStringTok[0].compare("IACK=7") == 0) { dataFile.ignore(144); }
-		else if (stoll(dataStringTok[0], 0, 16) >= stoll("40000C20", 0, 16) && stoll(dataStringTok[0], 0, 16) <= stoll("4000101C", 0, 16)) {
+		else if (stoll(dataStringTok[0], 0, 16) >= stoll("40000C20", 0, 16) && stoll(dataStringTok[0], 0, 16) <= stoll("40000C73", 0, 16)) {
 			dataFile >> dataStringTok[1];
 			dataFile.ignore(11);
 			dataFile >> dataStringTok[2];
@@ -50,7 +50,7 @@ void Parser::parseData() {
 			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], lineNumber);
 			dataList.push_back(newData);
 		}
-		else if (stoll(dataStringTok[0], 0, 16) >= stoll("40000818", 0, 16) && stoll(dataStringTok[0], 0, 16) <= stoll("40000C14", 0, 16)) {
+		else if (stoll(dataStringTok[0], 0, 16) >= stoll("40000818", 0, 16) && stoll(dataStringTok[0], 0, 16) <= stoll("4000086B", 0, 16)) {
 			dataFile >> dataStringTok[1];
 			dataFile.ignore(11);
 			dataFile >> dataStringTok[2];

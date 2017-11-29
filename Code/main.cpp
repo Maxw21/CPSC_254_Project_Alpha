@@ -13,6 +13,6 @@ int main() {
 	Parser* parser = new Parser();
 	parser->parseData();
 	dataList = parser->getList();
-
+	
 	return 0;
 }
