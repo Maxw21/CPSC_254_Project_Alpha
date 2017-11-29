@@ -16,15 +16,18 @@ public:
 	int bin_parser_revorder(string, int, int);
 	string bin_to_message(int, map<int, char>);
 	void list_of_data(list<MemoryData*>);
-	void message_output_rw(int, int);
+	void message_output_rw(int, int, string, string);
 
 private:
 	string binary;
 	string outMsg;
 	string list_address;
+	string list_address_comp;
 	string list_address_2;
+	string list_address_2_comp;
 	string list_data;
 	string list_time;
+	string cycle;
 	int list_line_number;
 	int wordCount;
 	int wordTotal;
@@ -33,7 +36,7 @@ private:
 	map<int, char> binMap1;
 	map<int, char> binMap2;
 	ofstream outFile;
-	MemoryData data;
+	MemoryData* data;
 	void message_output_fields(int, int, string);
 	string hex_to_bin(string);
 };

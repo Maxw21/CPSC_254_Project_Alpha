@@ -11,15 +11,13 @@ Interpreter::Interpreter() {
 	j = 0;
 	binMap1 = {};									// Use 2 bitMaps to separate binary conversion into 2 binary-converted fields, ex:
 	binMap2 = {};									// 1A022DFE -> 1A02: Map1 = 0001101000000010 and 2DFE: Map2 = 0010110111111110
-	outFile.open("new_test_data.log", ios_base::app);
-	ptr = dataList.front();
+	outFile.open("test_data_out.log");
 }
 
 Interpreter::~Interpreter() {}
 
 // If the addresses are in ascending value order, then output in order
 int Interpreter::bin_parser_inorder(string binary, int wordCount, int wordTotal, int lineNum) {
-	while (true) {
 		int x = wordCount;
 
 		for (i = 15, j = 0; i > -1; i--, j++) {
@@ -44,12 +42,10 @@ int Interpreter::bin_parser_inorder(string binary, int wordCount, int wordTotal,
 			outFile << endl;
 
 		return x;
-	}
 }
 
 // If the addresses are in descending value order, then output in reverse order
 int Interpreter::bin_parser_revorder(string binary, int wordCount, int lineNum) {
-	while (true) {
 		int x = wordCount;
 
 		for (i = 15, j = 16; i > -1; i--, j++) {
@@ -73,7 +69,6 @@ int Interpreter::bin_parser_revorder(string binary, int wordCount, int lineNum) 
 		x--;
 
 		return x;
-	}
 }
 
 // Output messages depending on word number, see assignment
@@ -144,9 +139,9 @@ string Interpreter::bin_to_message(int wordCount, map<int, char> binMap) {
 	}
 	case 22: {
 		if (binMap[3] == '1')
-			return "Direction = 1 (left)";
+			return "Direction = 1 (Left)";
 		else
-			return "Direction = 0 (right)";
+			return "Direction = 0 (Right)";
 	}
 	case 32: {
 		int total = 0;
@@ -192,33 +187,46 @@ void Interpreter::message_output_fields(int lineNum, int wordNum, string message
 }
 
 // Output formatting depending on line number, word number, and read or write command
-void Interpreter::message_output_rw(int lineNum, int wordNum) {
+void Interpreter::message_output_rw(int lineNum, int wordNum, string cycle, string sd) {
 	if (wordNum == 0) {
-		outFile << "Line " << lineNum << ": <<RD/WR StoD/DtoS>> command: 0 words" << endl << endl;
+		outFile << endl << "Line " << lineNum << ": " << cycle << " " << sd << " command: 0 words" << endl;
 	}
-	else
-		outFile << "Line " << lineNum << ": <<RD/WR StoD/DtoS>> command: " << wordNum << " words" << endl;
+	else {
+		outFile << endl << "Line " << lineNum << ": " << cycle << " " << sd << " command: " << wordNum << " words" << endl;
+	}
 }
 
 void Interpreter::list_of_data(list<MemoryData*> dataList) {
-	MemoryData* ptr = dataList.front();
+	MemoryData* ptr;
+	data = dataList.front();
 	while (true) {
 		// INITIALIZE FIRST NODE DATA
-		list_address = data.getAddress();
-		list_data = data.getData();
-		list_line_number = data.getLineNumber;
-		list_time = data.getTime();
-		
+		list_address = data->getAddress();
+		list_data = data->getData();
+		list_line_number = data->getLineNumber();
+		list_time = data->getTime();
+		if (data->getCycle() == "Rd") {
+			cycle = "Read";
+		}
+		else {
+			cycle = "Write";
+		}
+
 		// IF FIRST NODE ADDRESS IS COMMAND CALL AND WORD DATA IS ZERO
 		if ((list_data == "00000000") && ((list_address == "40000810") || (list_address == "40000C18"))) {
-			message_output_rw(list_line_number, 0);
+			if (list_address == "40000810") {
+				message_output_rw(list_line_number, wordTotal, cycle, "S-to-D");
+			}
+			else {
+				message_output_rw(list_line_number, wordTotal, cycle, "D-to-S");
+			}
 			dataList.pop_front();
-			ptr = dataList.front();
+			data = dataList.front();
 
 			// INCREMENT NODE
-			list_data = data.getData();
-			list_address = data.getAddress();
-			list_line_number = data.getLineNumber();
+			list_data = data->getData();
+			list_address = data->getAddress();
+			list_line_number = data->getLineNumber();
 		}
 
 		// IF FIRST NODE ADDRESS IS COMMAND CALL AND WORD DATA IS NOT ZERO
@@ -227,91 +235,122 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 			stringstream stream;
 			stream << list_data;
 			stream >> hex >> wordTotal;
+			wordTotal /= 2;
 
 			// OUTPUT LINE NUMBER, COMMAND CALL, AND WORD TOTAL
-			message_output_rw(list_line_number, wordTotal);
-
+			if (list_address == "40000810") {
+				message_output_rw(list_line_number, wordTotal, cycle, "S-to-D");
+			}
+			else {
+				message_output_rw(list_line_number, wordTotal, cycle, "D-to-S");
+			}
+			
 			// POP COMMAND CALL NODE AND MOVE TO ACTUAL DATA
 			dataList.pop_front();
-			ptr = dataList.front();
+			data = dataList.front();
 
 			// INITIALIZE ADDRESS, BINARY, AND LINE NUMBER OF CURRENT NODE
-			list_address = data.getAddress();
-			list_data = data.getData();
-			list_line_number = data.getLineNumber();
+			list_address = data->getAddress();
+			list_address_comp = "0x";
+			list_address_comp.append(data->getAddress());
+			list_data = data->getData();
+			list_line_number = data->getLineNumber();
 			binary = hex_to_bin(list_data);
+
+			if (list_address == "40000810" || list_address == "40000C18") {
+				continue;
+			}
 
 			// POP CURRENT NODE TO COMPARE ADDRESS WITH NEXT NODE
 			dataList.pop_front();
 			ptr = dataList.front();
-			list_address_2 = data.getAddress();
+			list_address_2 = ptr->getAddress();
+			list_address_2_comp = "0x";
+			list_address_2_comp.append(ptr->getAddress());
 
-			if ((list_address >= "40000818") && (list_address <= "4000086B")) {
-				if (list_address < list_address_2) {
+			if ((list_address_comp >= "0x40000818") && (list_address_comp <= "0x4000086B")) {
+				if (list_address_comp < list_address_2_comp) {
 					bin_parser_inorder(binary, 0, wordTotal, list_line_number);
 					wordCount = 2;
 
-					while (list_address <= "4000086B") {
-						list_address = data.getAddress();
-						list_data = data.getData();
+					while (wordCount < wordTotal) {
+						list_address = data->getAddress();
+						list_address_comp = "0x";
+						list_address_comp.append(data->getAddress());
+						list_data = data->getData();
 						binary = hex_to_bin(list_data);
-						list_line_number = data.getLineNumber();
+						list_line_number = data->getLineNumber();
 
 						bin_parser_inorder(binary, wordCount, wordTotal, list_line_number);
 						dataList.pop_front();
-						ptr = dataList.front();
+						data = dataList.front();
+						wordCount += 2;
 					}
 				}
-				else if (list_address > list_address_2) {
-					wordCount = wordTotal;
-					bin_parser_revorder(binary, wordCount, list_line_number);
+				else if (list_address_comp > list_address_2_comp) {
+					wordCount = wordTotal - 1;
+					wordCount = bin_parser_revorder(binary, wordCount, list_line_number);
 
-					while (list_address >= "40000818") {
-						list_address = data.getAddress();
-						list_data = data.getData();
+					while (wordCount >= 0) {
+						list_address = data->getAddress();
+						list_address_comp = "0x";
+						list_address_comp.append(data->getAddress());
+						list_data = data->getData();
 						binary = hex_to_bin(list_data);
-						list_line_number = data.getLineNumber();
+						list_line_number = data->getLineNumber();
 
-						bin_parser_revorder(binary, wordCount, list_line_number);
+						wordCount = bin_parser_revorder(binary, wordCount, list_line_number);
 						dataList.pop_front();
-						ptr = dataList.front();
+						if (dataList.size() == 0) {
+							break;
+						}
+						data = dataList.front();
 					}
 				}
 			}
-			else if ((list_address >= "40000C20") && (list_address <= "40000C73")) {
-				if (list_address < list_address_2) {
+			else if ((list_address_comp >= "0x40000C20") && (list_address_comp <= "0x40000C73")) {
+				if (list_address_comp < list_address_2_comp) {
 					bin_parser_inorder(binary, 0, wordTotal, list_line_number);
 					wordCount = 2;
 
-					while (list_address <= "40000C73") {
-						list_address = data.getAddress();
-						list_data = data.getData();
+					while (wordCount < wordTotal) {
+						list_address = data->getAddress();
+						list_address_comp = "0x";
+						list_address_comp.append(data->getAddress());
+						list_data = data->getData();
 						binary = hex_to_bin(list_data);
-						list_line_number = data.getLineNumber();
+						list_line_number = data->getLineNumber();
 
 						bin_parser_inorder(binary, wordCount, wordTotal, list_line_number);
 						dataList.pop_front();
-						ptr = dataList.front();
+						data = dataList.front();
+						wordCount += 2;
 					}
 				}
-				else if (list_address > list_address_2) {
-					wordCount = wordTotal;
-					bin_parser_revorder(binary, wordCount, list_line_number);
+				else if (list_address_comp > list_address_2_comp) {
+					wordCount = wordTotal - 1;
+					wordCount = bin_parser_revorder(binary, wordCount, list_line_number);
 
-					while (list_address >= "40000C20") {
-						list_address = data.getAddress();
-						list_data = data.getData();
+					while (wordCount >= 0) {
+						list_address = data->getAddress();
+						list_address_comp = "0x";
+						list_address_comp.append(data->getAddress());
+						list_data = data->getData();
 						binary = hex_to_bin(list_data);
-						list_line_number = data.getLineNumber();
+						list_line_number = data->getLineNumber();
 
-						bin_parser_revorder(binary, wordCount, list_line_number);
+						wordCount = bin_parser_revorder(binary, wordCount, list_line_number);
 						dataList.pop_front();
-						ptr = dataList.front();
+						data = dataList.front();
 					}
 				}
 			}
 		}
+		if (dataList.size() == 0) {
+			break;
+		}
 	}
+	outFile.close();
 }
 
 // Hex to Binary Conversion

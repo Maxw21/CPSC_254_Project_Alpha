@@ -37,3 +37,7 @@ string MemoryData::getTime() {
 int MemoryData::getLineNumber() {
 	return lineNumber;
 }
+
+string MemoryData::getCycle() {
+	return cycle;
+}

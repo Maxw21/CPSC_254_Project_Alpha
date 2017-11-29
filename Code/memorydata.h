@@ -14,6 +14,7 @@ public:
 	string getData();
 	string getTime();
 	int getLineNumber();
+	string getCycle();
 
 private:
 	string address;
