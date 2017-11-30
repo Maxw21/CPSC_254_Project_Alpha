@@ -1,10 +1,14 @@
 #ifndef _INTERPRETER_H
 #define _INTERPRETER_H
 
+#include <iostream>
+#include <iomanip>
 #include <string>
 #include <map>
 #include <fstream>
 #include <list>
+#include <sstream>
+#include <math.h>
 #include "memorydata.h"
 using namespace std;
 
@@ -28,6 +32,17 @@ private:
 	string list_data;
 	string list_time;
 	string cycle;
+	stringstream timeConverter;
+	string timeSize;
+	double timeCount;
+	double RsTdTime;
+	double RsTdByte;
+	double RdTsTime;
+	double RdTsByte;
+	double WsTdTime;
+	double WsTdByte;
+	double WdTsTime;
+	double WdTsByte;
 	int list_line_number;
 	int wordCount;
 	int wordTotal;

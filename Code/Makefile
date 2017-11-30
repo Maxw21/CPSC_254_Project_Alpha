@@ -1,5 +1,5 @@
 main.exe: main.o parser.o interpreter.o memorydata.o
-	g++ main.o parser.o interpreter.o memorydata.o -o main.exe
+	g++ main.o memorydata.o parser.o interpreter.o -o main.exe
 
 memorydata.o: memorydata.cpp memorydata.h
 	g++ -c memorydata.cpp

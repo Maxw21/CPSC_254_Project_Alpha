@@ -15,12 +15,13 @@ extern fstream rwStream;
 
 class Parser {
 public:
-	Parser();
+	Parser(string);
 	~Parser();
 	list<MemoryData*> getList();
 	void parseData();
 	
 private:
+	string fileName;
 	list<MemoryData*> dataList;
 };
 

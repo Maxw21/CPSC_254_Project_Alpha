@@ -1,6 +1,4 @@
 #include "interpreter.h"
-#include <iostream>
-#include <sstream>
 
 Interpreter::Interpreter() {
 	binary = "";									//	Assign binary conversion from hex to bin cpp
@@ -193,6 +191,14 @@ void Interpreter::message_output_rw(int lineNum, int wordNum, string cycle, stri
 }
 
 void Interpreter::list_of_data(list<MemoryData*> dataList) {
+	RsTdTime = 0;
+	RdTsTime = 0;
+	WsTdTime = 0;
+	WdTsTime = 0;
+	RsTdByte = 0;
+	RdTsByte = 0;
+	WsTdByte = 0;
+	WdTsByte = 0;
 	MemoryData* ptr;
 	data = dataList.front();
 	while (true) {
@@ -202,6 +208,7 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 		list_data = data->getData();
 		list_line_number = data->getLineNumber();
 		list_time = data->getTime();
+		
 		if (data->getCycle() == "Rd") {
 			cycle = "Read";
 		}
@@ -212,9 +219,67 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 		// IF FIRST NODE ADDRESS IS COMMAND CALL AND WORD DATA IS ZERO
 		if ((list_data == "00000000") && ((list_address == "40000810") || (list_address == "40000C18"))) {
 			if (list_address == "40000810") {
+				if (cycle == "Read") {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					RsTdTime += timeCount;
+				}
+				else {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					WsTdTime += timeCount;
+				}
+
 				message_output_rw(list_line_number, wordTotal, cycle, "S-to-D");
 			}
 			else {
+				if (cycle == "Read") {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					RdTsTime += timeCount;
+				}
+				else {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					WdTsTime += timeCount;
+				}
+
 				message_output_rw(list_line_number, wordTotal, cycle, "D-to-S");
 			}
 			dataList.pop_front();
@@ -236,9 +301,71 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 
 			// OUTPUT LINE NUMBER, COMMAND CALL, AND WORD TOTAL
 			if (list_address == "40000810") {
+				if (cycle == "Read") {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					RsTdTime += timeCount;
+					RsTdByte += wordTotal * 16;
+				}
+				else {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					WsTdTime += timeCount;
+					WsTdByte += wordTotal * 16;
+				}
+
 				message_output_rw(list_line_number, wordTotal, cycle, "S-to-D");
 			}
 			else {
+				if (cycle == "Read") {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					RdTsTime += timeCount;
+					RdTsByte += wordTotal * 16;
+				}
+				else {
+					timeCount = 0;
+					timeConverter.str(string());
+					timeConverter.clear();
+					timeSize = list_time[list_time.size() - 2];
+					list_time = list_time.substr(0, list_time.size() - 2);
+					timeConverter << list_time;
+					timeConverter >> timeCount;
+					if (timeSize == "n")
+						timeCount /= 1000000;
+					else if (timeSize == "u")
+						timeCount /= 1000;
+					WdTsTime += timeCount;
+					WdTsByte += wordTotal * 16;
+				}
+
 				message_output_rw(list_line_number, wordTotal, cycle, "D-to-S");
 			}
 			
@@ -277,6 +404,37 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						list_data = data->getData();
 						binary = hex_to_bin(list_data);
 						list_line_number = data->getLineNumber();
+						list_time = data->getTime();
+
+						if (cycle == "Read") {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							RsTdTime += timeCount;
+						}
+						else {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							WsTdTime += timeCount;
+						}
+
 
 						bin_parser_inorder(binary, wordCount, wordTotal, list_line_number);
 						dataList.pop_front();
@@ -295,6 +453,37 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						list_data = data->getData();
 						binary = hex_to_bin(list_data);
 						list_line_number = data->getLineNumber();
+						list_time = data->getTime();
+
+						if (cycle == "Read") {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							RsTdTime += timeCount;
+						}
+						else {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							WsTdTime += timeCount;
+						}
+
 
 						wordCount = bin_parser_revorder(binary, wordCount, list_line_number);
 						dataList.pop_front();
@@ -317,6 +506,38 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						list_data = data->getData();
 						binary = hex_to_bin(list_data);
 						list_line_number = data->getLineNumber();
+						list_time = data->getTime();
+
+
+						if (cycle == "Read") {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							RdTsTime += timeCount;
+						}
+						else {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							WdTsTime += timeCount;
+						}
+
 
 						bin_parser_inorder(binary, wordCount, wordTotal, list_line_number);
 						dataList.pop_front();
@@ -335,6 +556,37 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 						list_data = data->getData();
 						binary = hex_to_bin(list_data);
 						list_line_number = data->getLineNumber();
+						list_time = data->getTime();
+
+						if (cycle == "Read") {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							RdTsTime += timeCount;
+						}
+						else {
+							timeCount = 0;
+							timeConverter.str(string());
+							timeConverter.clear();
+							timeSize = list_time[list_time.size() - 2];
+							list_time = list_time.substr(0, list_time.size() - 2);
+							timeConverter << list_time;
+							timeConverter >> timeCount;
+							if (timeSize == "n")
+								timeCount /= 1000000;
+							else if (timeSize == "u")
+								timeCount /= 1000;
+							WdTsTime += timeCount;
+						}
+
 
 						wordCount = bin_parser_revorder(binary, wordCount, list_line_number);
 						dataList.pop_front();
@@ -347,6 +599,24 @@ void Interpreter::list_of_data(list<MemoryData*> dataList) {
 			break;
 		}
 	}
+	RsTdByte /= 8000;	//kilo
+	WsTdByte /= 8000000; //mega
+	RdTsByte /= 8000;	//kilo
+	WdTsByte /= 8000;	//bit
+
+	RsTdTime /= 1000;
+	WsTdTime /= 1000;
+	RdTsTime /= 1000;
+	WdTsTime /= 1000;
+
+	outFile << fixed;
+	outFile << setprecision(2);
+
+	outFile << endl << "Read S-to-D: " << (RsTdByte / RsTdTime) << " Kilobits/sec" << endl;
+	outFile << "Write S-to-D: " << (WsTdByte / WsTdTime) << " Megabits/sec" << endl;
+	outFile << "Read D-to-S: " << (RdTsByte / RdTsTime) << " Kilobits/sec" << endl;
+	outFile << "Write D-to-S: " << (WdTsByte / WdTsTime) << " Bits/sec" << endl;
+
 	outFile.close();
 }
 

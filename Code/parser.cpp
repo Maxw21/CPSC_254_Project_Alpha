@@ -1,7 +1,9 @@
 #include "parser.h"
 #include <vector>
 
-Parser::Parser() { }
+Parser::Parser(string fileName) {
+	this->fileName = fileName;
+}
 
 Parser::~Parser() { }
 
@@ -11,11 +13,12 @@ void Parser::parseData() {
 	MemoryData* newData;
 	string dataStringTok[4] = { "" };
 	string testString;
-
-	dataFile.open("test_data.log", ios::in);
+	if (fileName != "") {
+		dataFile.open(fileName, ios::in);
+	}
 
 	if (!dataFile.is_open()) {
-		exit(1);
+		return;
 	}
 	//Skip to address location
 	dataFile.ignore(82);
