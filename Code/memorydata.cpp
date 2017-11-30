@@ -8,10 +8,11 @@ MemoryData::MemoryData() {
 	lineNumber = 0;
 }
 
-MemoryData::MemoryData(string address, string data, string cycle, string time, int lineNumber) {
+MemoryData::MemoryData(string address, string data, string size, string cycle, string time, int lineNumber) {
 	this->address = address;
 	this->data = data;
 	this->cycle = cycle;
+	this->size = size;
 	this->time = time;
 	this->lineNumber = lineNumber;
 }
@@ -40,4 +41,8 @@ int MemoryData::getLineNumber() {
 
 string MemoryData::getCycle() {
 	return cycle;
+}
+
+string MemoryData::getSize() {
+	return size;
 }

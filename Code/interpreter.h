@@ -31,8 +31,13 @@ private:
 	string list_address_2_comp;
 	string list_data;
 	string list_time;
+	string list_size;
 	string cycle;
 	stringstream timeConverter;
+	stringstream byteConverter;
+	string bitConverter;
+	int byteSize;
+	bool gotTime;
 	string timeSize;
 	double timeCount;
 	double RsTdTime;
@@ -54,6 +59,7 @@ private:
 	MemoryData* data;
 	void message_output_fields(int, int, string);
 	string hex_to_bin(string);
+	void timeBit(string, string, string, string);
 };
 
 #endif
