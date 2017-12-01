@@ -1,78 +1,77 @@
 #include "parser.h"
+#include <vector>
 
-Parser::Parser() { }
+Parser::Parser(string fileName) {
+	this->fileName = fileName;
+}
 
 Parser::~Parser() { }
 
-void Parser::makeList() {
-	MemoryData* memoryPointer;
+void Parser::parseData() {
+	string dataString;
+	int lineNumber = 1;
 	MemoryData* newData;
-	string dataString = "";
-	string dataStringTok[14];
-	int lineNumber = 2;
-	bool getTime = false;
-
-
-	dataFile.open("test_data.log", ios::in);
+	string dataStringTok[5] = { "" };
+	string testString;
+	if (fileName != "") {
+		dataFile.open(fileName, ios::in);
+	}
 
 	if (!dataFile.is_open()) {
-		exit(1);
+		return;
 	}
-
-	// Discard first line in text file
-	getline(dataFile, dataString);
-
-	// Get first line of data
-	getline(dataFile, dataString);
-	istringstream streamBuffer(dataString);
-	for (int i = 0; i < 14; i++) {
-		streamBuffer >> dataStringTok[i];
-	}
-	if (dataStringTok[6].compare("0x40000810") == 0 || dataStringTok[6].compare("0x40000C18") == 0) {
-			newData = new MemoryData(dataStringTok[6],dataStringTok[7],dataStringTok[9],dataStringTok[10],lineNumber);
-			dataList.push_back(newData);
-			getTime = true;
-	}
-
+	//Skip to address location
+	dataFile.ignore(82);
 	while (!dataFile.eof()) {
+		dataFile >> dataStringTok[0];
+		testString = "0x";
+		testString.append(dataStringTok[0]);
+		// If the address is valid save the data from the line into memorydata object and store those in a list
+		if (dataStringTok[0] == "40000810") {
+			dataFile >> dataStringTok[1];
+			dataFile >> dataStringTok[2];
+			dataFile >> dataStringTok[3];
+			dataFile.ignore(53);
+			dataFile >> dataStringTok[4];
+			dataFile.ignore(54);
+			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], dataStringTok[4], lineNumber);
+			dataList.push_back(newData);
+		}
+		else if (dataStringTok[0] == "40000C18") {
+			dataFile >> dataStringTok[1];
+			dataFile >> dataStringTok[2];
+			dataFile >> dataStringTok[3];
+			dataFile.ignore(53);
+			dataFile >> dataStringTok[4];
+			dataFile.ignore(54);
+			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], dataStringTok[4], lineNumber);
+			dataList.push_back(newData);
+		}
+		else if (testString >= "0x40000C20" && testString <= "0x40000C73") {
+			dataFile >> dataStringTok[1];
+			dataFile >> dataStringTok[2];
+			dataFile >> dataStringTok[3];
+			dataFile.ignore(53);
+			dataFile >> dataStringTok[4];
+			dataFile.ignore(54);
+			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], dataStringTok[4], lineNumber);
+			dataList.push_back(newData);
+		}
+		else if (testString >= "0x40000818" && testString <= "0x4000086B") {
+			dataFile >> dataStringTok[1];
+			dataFile >> dataStringTok[2];
+			dataFile >> dataStringTok[3];
+			dataFile.ignore(53);
+			dataFile >> dataStringTok[4];
+			dataFile.ignore(54);
+			newData = new MemoryData(dataStringTok[0], dataStringTok[1], dataStringTok[2], dataStringTok[3], dataStringTok[4], lineNumber);
+			dataList.push_back(newData);
+		}
+		else
+			dataFile.ignore(144);
 
 		lineNumber++;
-		string dataStringTok[14] = { "" };
-		getline(dataFile, dataString);
-		istringstream streamBuffer(dataString);
-		for (int i = 0; i < 14; i++) {
-			streamBuffer >> dataStringTok[i];
-		}
-
-		// Set the time for the previous valid stream
-		if (getTime == true) {
-			memoryPointer = dataList.back();
-			memoryPointer->setTime(dataStringTok[2]);
-			getTime = false;
-		}
-
-		// Check if the address should be entered into the list
-		if(!dataStringTok[1].compare("") == 0) {
-			if (dataStringTok[6].compare("40000810") == 0 || dataStringTok[6].compare("40000C18") == 0) {
-				newData = new MemoryData(dataStringTok[6], dataStringTok[7], dataStringTok[9], dataStringTok[10], lineNumber);
-				dataList.push_back(newData);
-				getTime = true;
-			}
-			if (dataStringTok[6].compare("IACK=7") == 0) {}
-			else if (stoll(dataStringTok[6],0,16) >= stoll("40000818",0,16) && stoll(dataStringTok[6], 0, 16) <= stoll("40000C14", 0, 16)) {
-				newData = new MemoryData(dataStringTok[6], dataStringTok[7], dataStringTok[9], dataStringTok[10], lineNumber);
-				dataList.push_back(newData);
-				getTime = true;
-			}
-			else if (stoll(dataStringTok[6], 0, 16) >= stoll("40000C20", 0, 16) && stoll(dataStringTok[6], 0, 16) <= stoll("4000101C", 0, 16)) {
-				newData = new MemoryData(dataStringTok[6], dataStringTok[7], dataStringTok[9], dataStringTok[10], lineNumber);
-				dataList.push_back(newData);
-				getTime = true;
-			}
-		}
 	}
-
-	dataFile.close();
 }
 
 list<MemoryData*> Parser::getList() {

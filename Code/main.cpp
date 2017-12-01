@@ -1,16 +1,21 @@
 #include "parser.h"
+#include "interpreter.h"
 #include <fstream>
-
-ifstream dataFile;
 
 using namespace std;
 
+ifstream dataFile;
+fstream rwStream;
 
+int main(int argc, char *argv[]) {
+	string fileName = argv[1];
+	list<MemoryData*> dataList;
+	Parser* parser = new Parser(fileName);
+	Interpreter* interpreter = new Interpreter();
 
-int main() {
-
-	Parser* parser = new Parser();
-	parser->makeList();
-
+	parser->parseData();
+	dataList = parser->getList();
+	interpreter->list_of_data(dataList);
+	
 	return 0;
 }
